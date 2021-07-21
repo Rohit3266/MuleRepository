@@ -25,5 +25,6 @@ http://www.mulesoft.org/schema/mule/powershell http://www.mulesoft.org/schema/mu
 				</on-error-propagate>
 			</error-handler>
 		</try>
+		<logger level="INFO" doc:name="Logger" doc:id="222140a1-7cf6-4164-8cd6-4463529c1cfd" message="Successfully executed my work"/>
 </flow>
 </mule>
