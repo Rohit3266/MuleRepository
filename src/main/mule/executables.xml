@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:powershell="http://www.mulesoft.org/schema/mule/powershell" xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/powershell http://www.mulesoft.org/schema/mule/powershell/current/mule-powershell.xsd">
+<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="976b2ae7-6da6-454d-86d6-fb40d81ee888" >
+<http:listener-connection host="0.0.0.0" port="8081" />
+</http:listener-config>
+	<powershell:config name="Powershell_Configuration" doc:name="Powershell Configuration" doc:id="f6778552-0b89-46f0-ba24-3964e058463e" >
+		<powershell:powershell-connection host="localhost" username="User02" password="mule7" />
+	</powershell:config>
+	<flow name="fileMoverFlow">
+<http:listener doc:name="Listener" doc:id="647deb40-c8ed-4bbe-97ab-324cfe131709" config-ref="HTTP_Listener_config" path="/teju"/>
+<set-payload value="#[payload]" doc:name="Set Payload"/>
+		<try doc:name="Try" doc:id="e014e1a1-a9c9-47cb-8527-2032e6c15f29" >
+			<powershell:execute-script-file-with-exception-handling doc:name="Execute script file (exception handling enabled)" doc:id="13c34407-8612-4199-91fc-4235689ec2a1" config-ref="Powershell_Configuration"/>
+			<error-handler>
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9e15ef59-535d-4399-b2bc-cc24de5084ed" type="ANY">
+					<logger level="INFO" doc:name="Logger" doc:id="d4d832ee-f0c5-48ec-bfad-71715d8d2155" message="#[error]"/>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+</flow>
+</mule>
